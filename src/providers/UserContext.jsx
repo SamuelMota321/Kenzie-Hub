@@ -9,6 +9,7 @@ export const UserContext = createContext({})
 
 export const UserContextProvider = ({ children }) => {
     const [userState, setUserState] = useState(null)
+    const [user, setUser] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const navigate = useNavigate()
 
@@ -23,9 +24,12 @@ export const UserContextProvider = ({ children }) => {
                         }
                     })
                     setUserState(data)
+                    setUser(true)
                 } catch (error) {
                     localStorage.removeItem("@TOKEN")
                 }
+            } else {
+                setUser(false)
             }
         }
         loadUser()
@@ -37,6 +41,7 @@ export const UserContextProvider = ({ children }) => {
             localStorage.setItem("@TOKEN", data.token)
             navigate("/dashboard")
             setUserState(data.user)
+            setUser(true)
 
         } catch (error) {
             setErrorMessage("Email ou senha inválidos")
@@ -88,7 +93,7 @@ export const UserContextProvider = ({ children }) => {
     }
 
     return (
-        <UserContext.Provider value={{ userLogin, userRegister, userLogout, userState, errorMessage }}>
+        <UserContext.Provider value={{ userLogin, userRegister, userLogout, userState, errorMessage, user }}>
             {children}
         </UserContext.Provider>
     )
